@@ -5,7 +5,7 @@ export default (state, action) => {
         case GET__DATA:
             return { ...state, data: action.payload };
         case ADD__DATA:
-            return action.payload == null ? { ...state, formData: [] } : { ...state, fromData: action.payload };
+            return action.payload == null ? { ...state, data: [] } : { ...state, data: action.payload };
         case DELETE__DATA:
             return;
         case UPDATE__DATA:
