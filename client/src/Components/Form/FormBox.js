@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { dataUrl } from "../../api/index";
 import axios from "axios";
 import { ADD__DATA, UPDATE__DATA } from "../../Context/action.type";
 import { DataContext } from "../../Context/DataContext";
-import { Form, FormGroup, Label, Input, Button, } from "reactstrap";
+import { Form, FormGroup, Input, Button, } from "reactstrap";
 import { toast } from "react-toastify";
 
 const FromBox = () => {
@@ -17,24 +17,23 @@ const FromBox = () => {
     const [gender, setGender] = useState('');
 
 
+    const data = {
+        firstName,
+        lastName,
+        email,
+        password,
+        gender
+    }
     const addData = async () => {
-        const data = {
-            firstName,
-            lastName,
-            email,
-            password,
-            gender
-        }
 
         await axios.post(dataUrl, data).then(res => {
-            console.log(res);
+            const { data } = res;
+            dispatch({
+                type: ADD__DATA,
+                payload: data,
+            })
         })
-        dispatch({
-            type: ADD__DATA,
-            payload: data,
-        })
-
-        console.log(data)
+        /* console.log(data) */
     }
 
 

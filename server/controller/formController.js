@@ -3,9 +3,7 @@ const Data = require('./../models/formModel');
 exports.getAllUserData = async (req, res) => {
     try {
         const formData = await Data.find();
-        res.status(200).json({
-            formData,
-        })
+        res.status(200).json(formData)
     } catch (error) {
         res.status(404).json({
             status: 'fail',
@@ -14,12 +12,11 @@ exports.getAllUserData = async (req, res) => {
     }
 }
 exports.createUserData = async (req, res) => {
+    const newformData = new Data(req.body)
     try {
-        const newData = await Data.create(req.body);
+        await newformData.save();
 
-        res.status(201).json({
-            newData,
-        })
+        res.status(201).json(newformData)
     } catch (error) {
         res.status(400).json({
             status: 'fail',
@@ -27,8 +24,9 @@ exports.createUserData = async (req, res) => {
         })
     }
 }
-/* exports.deleteData = async (req, res) => {
+exports.deleteData = async (req, res) => {
     try {
+        await Data.findByIdAndDelete(req.params.id)
         res.status(204).json({
             status: 'success',
             data: null,
@@ -40,7 +38,7 @@ exports.createUserData = async (req, res) => {
         })
     }
 }
-exports.updateData = async (req, res) => {
+/* exports.updateData = async (req, res) => {
     try {
         res.status(200).json({
             status: 'success',

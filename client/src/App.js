@@ -11,17 +11,20 @@ import { dataUrl } from "./api/index";
 import Home from './Page/Home';
 
 const App = () => {
-  const data = {}
 
-  const [userData, dispatch] = useReducer(Reducer, data);
+  const [userData, dispatch] = useReducer(Reducer, []);
   const getData = async () => {
-    await axios.get(dataUrl).then(res => {
-      console.log(res.data);
+    try {
+      let res = await axios.get(dataUrl)
+      let { data } = res;
       dispatch({
         type: GET__DATA,
-        payload: res.data
+        payload: data
       })
-    })
+
+    } catch (error) {
+      console.error(error)
+    }
   }
   useEffect(() => {
     getData();

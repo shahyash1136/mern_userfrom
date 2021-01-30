@@ -4,6 +4,6 @@ const router = express.Router();
 
 router.route('/').get(formController.getAllUserData).post(formController.createUserData);
 
-/* router.route('/:id').patch(formController.updateData).delete(formController.deleteData); */
+router.route('/:id').delete(formController.deleteData);
 
 module.exports = router;
