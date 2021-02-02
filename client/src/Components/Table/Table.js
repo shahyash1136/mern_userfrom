@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Table, Spinner } from "reactstrap";
+import { Table } from "reactstrap";
 import { DELETE__DATA } from '../../Context/action.type';
 import { dataUrl } from '../../api/index'
 import { DataContext } from "../../Context/DataContext";
@@ -7,7 +7,7 @@ import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const TableData = () => {
+const TableData = ({ setCurrentId }) => {
 
     const { userData, dispatch } = useContext(DataContext);
     /* userData.map(el => {
@@ -24,11 +24,11 @@ const TableData = () => {
         })
         toast('User Data Deleted', {
             type: 'error',
-            position: "top-left",
+            position: "bottom-left",
         })
     }
 
-    const markup = !userData.length ? <tr ><td colSpan="6" style={{ width: '100%', textAlign: 'center' }}><Spinner /></td></tr> : userData.map(el => {
+    const markup = !userData.length ? <tr ><td colSpan="6" style={{ width: '100%', textAlign: 'center' }}>{"No Data Available"}</td></tr> : userData.map(el => {
         return <tr key={el._id}>
             <td style={{ width: '16.66%', textAlign: 'center' }}>{el.firstName}</td>
             <td style={{ width: '16.66%', textAlign: 'center' }}>{el.lastName}</td>
@@ -37,7 +37,7 @@ const TableData = () => {
             <td style={{ width: '16.66%', textAlign: 'center' }}>{el.gender}</td>
             <td style={{ width: '16.66%', textAlign: 'center' }}>
                 <span style={{ marginRight: "10px" }}>
-                    <FaEdit />
+                    <FaEdit onClick={() => setCurrentId(el._id)} />
                 </span>
                 <span>
                     <FaRegTrashAlt onClick={() => { deletePost(el._id) }} />

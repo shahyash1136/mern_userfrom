@@ -9,8 +9,8 @@ export default (state, action) => {
             return [...state, action.payload];
         case DELETE__DATA:
             return state.filter(el => el._id !== action.payload);
-        /* case UPDATE__DATA:
-            return; */
+        case UPDATE__DATA:
+            return state.map(el => (el._id === action.payload._id ? action.payload : el));
         default:
             return state;
     }

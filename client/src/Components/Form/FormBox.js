@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { dataUrl } from "../../api/index";
 import axios from "axios";
 import { ADD__DATA, UPDATE__DATA } from "../../Context/action.type";
@@ -6,10 +6,10 @@ import { DataContext } from "../../Context/DataContext";
 import { Form, FormGroup, Input, Button, } from "reactstrap";
 import { toast } from "react-toastify";
 
-const FromBox = () => {
+const FromBox = ({ currentId, setCurrentId }) => {
 
-    const { dispatch } = useContext(DataContext);
-
+    const { userData, dispatch } = useContext(DataContext);
+    const udapteUserData = userData.find(el => el._id === currentId);
     const [firstName, setFirstName] = useState('');
     const [lastName, setlastName] = useState('');
     const [email, setEmail] = useState('');
@@ -24,39 +24,83 @@ const FromBox = () => {
         password,
         gender
     }
+
+
+    useEffect(() => {
+        if (udapteUserData) {
+            setFirstName(udapteUserData.firstName);
+            setlastName(udapteUserData.lastName);
+            setEmail(udapteUserData.email);
+            setPassword(udapteUserData.password);
+            setGender(udapteUserData.gender);
+        }
+    }, [udapteUserData])
+
     const addData = async () => {
 
         await axios.post(dataUrl, data).then(res => {
-            const { data } = res;
-            dispatch({
-                type: ADD__DATA,
-                payload: data,
-            })
+            try {
+                const { data } = res;
+                dispatch({
+                    type: ADD__DATA,
+                    payload: data,
+                })
+
+            } catch (error) {
+                console.log(error)
+            }
+        });
+
+        toast(`Data added successfully`, {
+            type: 'success',
+            position: "bottom-left",
         })
-        /* console.log(data) */
+    }
+
+    const updateData = async (currentId) => {
+
+        try {
+            await axios.patch(`${dataUrl}/${currentId}`, data).then(res => {
+                const { data } = res;
+                dispatch({
+                    type: UPDATE__DATA,
+                    payload: data,
+                })
+            });
+        } catch (error) {
+            console.log(error)
+        }
+
+        toast(`Data updated successfully`, {
+            type: 'success',
+            position: "bottom-left",
+        })
     }
 
 
-
+    const clear = () => {
+        setCurrentId(0);
+        setFirstName('');
+        setlastName('');
+        setEmail('');
+        setPassword('');
+        setGender('');
+    }
 
     const handelSubmit = (e) => {
         e.preventDefault();
-        if (firstName === '' || lastName === '' || email === '' || password === '' || gender === '') {
+        /* if (firstName === '' || lastName === '' || email === '' || password === '' || gender === '') {
             toast(`Please Enter All The Field's`, {
                 type: 'error',
                 position: "top-left",
             })
-        } else {
+        } */
+        if (Number(currentId) === 0) {
             addData();
-            toast(`Data added successfully`, {
-                type: 'success',
-                position: "top-left",
-            })
-            setFirstName('');
-            setlastName('');
-            setEmail('');
-            setPassword('');
-            setGender('');
+            clear();
+        } else {
+            updateData(currentId);
+            clear();
         }
     }
 

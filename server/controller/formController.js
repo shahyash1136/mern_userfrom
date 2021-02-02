@@ -1,4 +1,8 @@
+const express = ('express');
+const mongoose = ('mongoose');
+
 const Data = require('./../models/formModel');
+
 
 exports.getAllUserData = async (req, res) => {
     try {
@@ -24,6 +28,20 @@ exports.createUserData = async (req, res) => {
         })
     }
 }
+
+exports.getData = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const data = await Data.findById(id);
+        res.status(200).json(data);
+
+    } catch (error) {
+        res.status(404).json({
+            message: error
+        })
+    }
+}
+
 exports.deleteData = async (req, res) => {
     try {
         await Data.findByIdAndDelete(req.params.id)
@@ -38,15 +56,17 @@ exports.deleteData = async (req, res) => {
         })
     }
 }
-/* exports.updateData = async (req, res) => {
+exports.updateData = async (req, res) => {
+    const data = req.body;
+    const id = req.params.id;
     try {
-        res.status(200).json({
-            status: 'success',
-        })
+        // if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+        const updatedData = await Data.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+        res.status(200).json(updatedData)
     } catch (error) {
         res.status(404).json({
             status: 'fail',
             message: error
         })
     }
-} */
+}

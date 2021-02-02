@@ -1,8 +1,10 @@
 const express = require('express');
 const morgon = require('morgan');
+const cors = require('cors');
 const formRouter = require('./router/formRouter');
 
 const app = express();
+app.use(cors());
 
 if (process.env.NODE_ENV === 'development') {
     app.use(morgon('dev'));
